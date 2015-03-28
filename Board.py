@@ -14,6 +14,9 @@ class Board(object):
         self.sanctuaries = []
 
         self.readMap()
+        # todo change to dynamic size
+        self.wsize = 7
+        self.lsize = 9
 
     def __str__(self):
         toreturn = ""
@@ -30,7 +33,7 @@ class Board(object):
                 line = []
                 for c in l:
                     if c != '\n':
-                        case = Case(int(c), actualcoord)
+                        case = Cell(int(c), actualcoord)
                         line.append(case)
 
                         if int(c) == 1:
@@ -44,8 +47,56 @@ class Board(object):
                 self.cases.append(line)
                 actualcoord[0] += 1
 
+    def neighbors(self, case):
+        """
+        :return list of all adjacent cells
+        """
+        listneighboors = []
+        if case.coordinate[1] + 1 <= self.lsize:
+            r = (case.coordinate[0], case.coordinate[1] + 1)
+            listneighboors.append(r)
+        if case.coordinate[1] - 1 >= 0:
+            l = (case.coordinate[0], case.coordinate[1] - 1)
+            listneighboors.append(l)
 
-class Case(object):
+        if case.coordinate[0] % 2 == 0:  # even
+            if case.coordinate[0] - 1 >= 0:
+                tl = (case.coordinate[0] - 1, case.coordinate[1])
+                listneighboors.append(tl)
+
+                if case.coordinate[1] + 1 <= self.lsize:
+                    tr = (case.coordinate[0] - 1, case.coordinate[1] + 1)
+                    listneighboors.append(tr)
+
+            if case.coordinate[0] + 1 <= self.wsize:
+                bl = (case.coordinate[0] + 1, case.coordinate[1])
+                listneighboors.append(bl)
+
+                if case.coordinate[1] + 1 <= self.lsize:
+                    br = (case.coordinate[0] + 1, case.coordinate[1] + 1)
+                    listneighboors.append(br)
+
+        else:  # odd
+            if case.coordinate[0] - 1 >= 0:
+                if case.coordinate[1] - 1 >= 0:
+                    tl = (case.coordinate[0] - 1, case.coordinate[1] - 1)
+                    listneighboors.append(tl)
+
+                tr = (case.coordinate[0] - 1, case.coordinate[1])
+                listneighboors.append(tr)
+
+            if case.coordinate[0] + 1 <= self.wsize:
+                if case.coordinate[1] - 1 >= 0:
+                    bl = (case.coordinate[0] + 1, case.coordinate[1] - 1)
+                    listneighboors.append(bl)
+
+                br = (case.coordinate[0] + 1, case.coordinate[1])
+                listneighboors.append(br)
+
+        return listneighboors
+
+
+class Cell(object):
     """
     type :
         0 : empty
@@ -65,5 +116,8 @@ class Case(object):
 
     def __repr__(self):
         return str(self.type)
+
+
+
 
 

@@ -10,6 +10,8 @@ class Token(object):
     def __init__(self, coord):
         self.name = "Token"
         self.coordinate = coord
+        self.movepoint = 3
+        self.lifepoint = 1
 
     def move(self):
         pass
@@ -32,6 +34,7 @@ class Brave(Token):
     def __init__(self, coord):
         self.name = "Brave"
         self.coordinate = coord
+        self.life = 1
 
     def build(self):
         pass
@@ -42,6 +45,7 @@ class Shaman(Token):
     def __init__(self, coord):
         self.name = "Shaman"
         self.coordinate = coord
+        self.life = 2
 
     def sendSpell(self):
         pass
@@ -52,6 +56,7 @@ class Pyromancer(Token):
     def __init__(self, coord):
         self.name = "Pyromancer"
         self.coordinate = coord
+        self.lifepoint = 3
 
     def sendFireball(self):
         pass
@@ -63,13 +68,14 @@ class Warrior(Token):
         super(Warrior, self).__init__()
         self.name = "Warrior"
         self.coordinate = coord
-
+        self.lifepoint = 4
 
 class Enchanter(Token):
     """docstring for Enchanter"""
     def __init__(self, coord):
         self.name = "Enchanter"
         self.coordinate = coord
+        self.lifepoint = 2
 
     def attack(self):
         pass

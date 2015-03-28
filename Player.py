@@ -5,6 +5,7 @@
 # version : 0.01
 
 import Token
+import logging
 
 
 class Player(object):
@@ -21,34 +22,49 @@ class Player(object):
         if self.color == "Red":
             self.wood = 1
             self.mana = 1
-            self.tokens = [Token.Shaman(self.board.circles[1]), Token.Brave(self.board.circles[1]),
-                           Token.Brave(self.board.circles[1])]
+            self.initcase = self.board.circles[1]
+            self.tokens = {"Shaman": Token.Shaman(self.board.circles[1]), "Braves": [Token.Brave(self.board.circles[1]),
+                           Token.Brave(self.board.circles[1])]}
         else:
             self.wood = 0
             self.mana = 0
-            self.tokens = [Token.Shaman(self.board.circles[0]), Token.Brave(self.board.circles[0]),
-                           Token.Brave(self.board.circles[0]), Token.Brave(self.board.circles[0])]
+            self.initcase = self.board.circles[0]
+            self.tokens = {"Shaman": Token.Shaman(self.board.circles[0]), "Braves": [Token.Brave(self.board.circles[0]),
+                           Token.Brave(self.board.circles[0]), Token.Brave(self.board.circles[0])]}
 
     def start(self):
         """
         all phases during the turn
         """
+        logging.info("Player " + self.color + "'s turn")
         self.reincarnating()
-        self.harversting()
+        self.harvesting()
         self.action()
         self.healing()
 
     def reincarnating(self):
-        pass
+        """
+            reincarnation of the Shaman
+        """
+        logging.debug("reincarnating phase")
+        if "Shaman" not in self.tokens:
+            self.tokens["Shaman"] = Token.Shaman(self.initcase)
 
-    def harversting(self):
-        pass
+    def harvesting(self):
+        logging.debug("harvesting phase")
+        braves = self.tokens.get("Braves")
+        for brave in braves:
+            # todo what's happen if two tokens on one cell?
+            if brave in self.board.forests:
+                self.wood += 1
+            elif brave in self.board.sanctuaries:
+                self.mana += 1
 
     def action(self):
-        pass
+        logging.debug("action phase")
 
     def healing(self):
-        pass
+        logging.debug("healing phase")
 
     def possibleActions(self):
         pass
