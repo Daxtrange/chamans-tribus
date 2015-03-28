@@ -22,6 +22,13 @@ class Token(object):
     def destroy(self):
         pass
 
+    def possibleActions(self):
+        """
+        list all possible actions for this token
+        :return: array
+        """
+        pass
+
     def __str__(self):
         return self.name
 

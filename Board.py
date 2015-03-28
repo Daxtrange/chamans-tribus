@@ -7,16 +7,13 @@
 
 class Board(object):
     def __init__(self, map="map1.txt"):
-        self.cases = []
+        self.cases = {}
         self.map = map
         self.circles = []
         self.forests = []
         self.sanctuaries = []
 
         self.readMap()
-        # todo change to dynamic size
-        self.wsize = 7
-        self.lsize = 9
 
     def __str__(self):
         toreturn = ""
@@ -25,16 +22,16 @@ class Board(object):
         return toreturn
 
     def readMap(self):
+        self.cases = {}
         actualcoord = [0, 0]
 
         with open("Map/"+self.map) as f:
             for l in f.readlines():
                 actualcoord[1] = 0  # start a new line
-                line = []
                 for c in l:
                     if c != '\n':
                         case = Cell(int(c), actualcoord)
-                        line.append(case)
+                        self.cases[(actualcoord[0], actualcoord[1])] = case
 
                         if int(c) == 1:
                             self.circles.append(case)
@@ -43,8 +40,10 @@ class Board(object):
                         elif int(c) == 3:
                             self.sanctuaries.append(case)
 
+                        self.lsize = actualcoord[1]
                         actualcoord[1] += 1
-                self.cases.append(line)
+
+                self.wsize = actualcoord[0]
                 actualcoord[0] += 1
 
     def neighbors(self, case):
@@ -108,11 +107,17 @@ class Cell(object):
     """
     def __init__(self, type, coordinate):
         self.type = type
-        self.occupied = []
+        self.building = None
         self.coordinate = (coordinate[0], coordinate[1])
 
+    def addBuilding(self, building):
+        self.building = building
+
+    def removeBuilding(self):
+        self.building = None
+
     def __str__(self):
-        return "case : " + str(self.coordinate)
+        return "| " + str(self.type) + " "+ str(self.coordinate)+" "
 
     def __repr__(self):
         return str(self.type)

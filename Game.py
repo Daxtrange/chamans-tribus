@@ -47,9 +47,20 @@ class Game(object):
         logging.info("End of the game")
 
     def display(self):
-        logging.info(self.board)
-        logging.info(self.red)
-        logging.info(self.black)
+        msg = "\n"
+        w = 0
+        while w <= self.board.wsize:
+            l = 0
+            while l <= self.board.lsize:
+                msg += str(self.board.cases[(w, l)])
+                l += 1
+            msg += "|\n"
+            w += 1
+        msg += "\n"
+        msg += str(self.red) + "\n"
+        msg += str(self.black) + "\n"
+        logging.info(msg)
+
 
 if __name__ == '__main__':
     game = Game()
