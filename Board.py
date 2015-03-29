@@ -16,10 +16,10 @@ class Board(object):
         self.readMap()
 
     def __str__(self):
-        toreturn = ""
+        msg = ""
         for i in self.cases:
-             toreturn += str(i) + "\n"
-        return toreturn
+            msg += str(i) + "\n"
+        return msg
 
     def readMap(self):
         self.cases = {}
@@ -117,7 +117,7 @@ class Cell(object):
         self.building = None
 
     def __str__(self):
-        return "| " + str(self.type) + " "+ str(self.coordinate)+" "
+        return "| " + str(self.type) + " " + str(self.coordinate)+" "
 
     def __repr__(self):
         return str(self.type)

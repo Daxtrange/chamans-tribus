@@ -7,9 +7,9 @@
 
 class Token(object):
     """Generic token"""
-    def __init__(self, coord):
+    def __init__(self, case):
         self.name = "Token"
-        self.coordinate = coord
+        self.case = case
         self.movepoint = 3
         self.lifepoint = 1
 
@@ -30,17 +30,17 @@ class Token(object):
         pass
 
     def __str__(self):
-        return self.name
+        return self.name + "["+str(self.life)+"] : " + str(self.case.coordinate) + " type case : " + str(self.case.type)
 
     def __repr__(self):
-        return self.name + " : " + str(self.coordinate)
+        return self.name + " : " + str(self.case.coordinate)
 
 
 class Brave(Token):
     """docstring for Brave"""
-    def __init__(self, coord):
+    def __init__(self, case):
         self.name = "Brave"
-        self.coordinate = coord
+        self.case = case
         self.life = 1
 
     def build(self):
@@ -49,9 +49,9 @@ class Brave(Token):
 
 class Shaman(Token):
     """docstring for Shaman"""
-    def __init__(self, coord):
+    def __init__(self, case):
         self.name = "Shaman"
-        self.coordinate = coord
+        self.case = case
         self.life = 2
 
     def sendSpell(self):
@@ -60,9 +60,9 @@ class Shaman(Token):
 
 class Pyromancer(Token):
     """docstring for Pyromancer"""
-    def __init__(self, coord):
+    def __init__(self, case):
         self.name = "Pyromancer"
-        self.coordinate = coord
+        self.case = case
         self.lifepoint = 3
 
     def sendFireball(self):
@@ -71,17 +71,18 @@ class Pyromancer(Token):
 
 class Warrior(Token):
     """docstring for Warrior"""
-    def __init__(self, coord):
+    def __init__(self, case):
         super(Warrior, self).__init__()
         self.name = "Warrior"
-        self.coordinate = coord
+        self.case = case
         self.lifepoint = 4
+
 
 class Enchanter(Token):
     """docstring for Enchanter"""
-    def __init__(self, coord):
+    def __init__(self, case):
         self.name = "Enchanter"
-        self.coordinate = coord
+        self.case = case
         self.lifepoint = 2
 
     def attack(self):
