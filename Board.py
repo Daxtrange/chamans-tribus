@@ -4,6 +4,8 @@
 # author : Aurelien De Ryck
 # version : 0.01
 
+import pygame
+
 
 class Board(object):
     def __init__(self, map="map1.txt"):
@@ -109,6 +111,17 @@ class Cell(object):
         self.type = type
         self.building = None
         self.coordinate = (coordinate[0], coordinate[1])
+
+        if self.type == 0:
+            self.sprite = "sprites/WWT-01.png"
+        elif self.type == 1:
+            self.sprite = "sprites/WWT-26.png"
+        elif self.type == 2:
+            self.sprite = "sprites/WWT-07.png"
+        elif self.type == 3:
+            self.sprite = "sprites/WWT-11.png"
+
+        self.pygame_coord = None
 
     def addBuilding(self, building):
         self.building = building

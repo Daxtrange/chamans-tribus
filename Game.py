@@ -7,6 +7,7 @@
 import Board
 import Player
 import logging
+import Gui
 
 logging.basicConfig(level=logging.WARN)
 
@@ -32,6 +33,8 @@ class Game(object):
         self.playerTurn = RED
 
         self.display()
+        self.gui = Gui.Gui(self.board)
+
 
         self.startGame()
 
