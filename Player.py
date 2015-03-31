@@ -6,6 +6,7 @@
 
 import Token
 import logging
+import pygame
 
 SHAMAN = 0
 BRAVE = 1
@@ -20,12 +21,15 @@ class Player(object):
     can be manipulate by AI
     """
 
-    def __init__(self, color, board):
+    def __init__(self, color, board, window):
 
         self.color = color
         self.board = board
+        self.window = window
+
         self.population = 0
         self.limitpopulation = 10
+        self.finish = True
 
         # initial state
         if self.color == "Red":
@@ -38,6 +42,12 @@ class Player(object):
                            WARRIOR: None,
                            PYROMANCER: None,
                            ENCHANTER: None}
+
+            self.shaman = Token.Shaman(self.board.circles[1])
+            self.braves = [Token.Brave(self.board.circles[1]), Token.Brave(self.board.circles[1])]
+            self.warrior = []
+            self.pyromancer = []
+            self.enchanter = []
             self.population = 2
 
         else:
@@ -51,6 +61,14 @@ class Player(object):
                            WARRIOR: None,
                            PYROMANCER: None,
                            ENCHANTER: None}
+
+            self.shaman = Token.Shaman(self.board.circles[0])
+            self.braves = [Token.Brave(self.board.circles[0]),
+                           Token.Brave(self.board.circles[0]),
+                           Token.Brave(self.board.circles[0])]
+            self.warrior = []
+            self.pyromancer = []
+            self.enchanter = []
             self.population = 3
 
     def start(self):
@@ -59,6 +77,7 @@ class Player(object):
         """
         logging.info("Player " + self.color + "'s turn")
         print("Player " + self.color + "'s turn")
+        self.finish = False
 
         self.reincarnating()
         self.harvesting()
@@ -85,6 +104,7 @@ class Player(object):
 
     def action(self):
         logging.debug("action phase")
+        """
         print("move shaman ->")
         while True:
             x = raw_input("enter x : ")
@@ -98,6 +118,7 @@ class Player(object):
                     print("invalid input")
             except:
                 print("invalid input")
+        """
 
     def healing(self):
         logging.debug("healing phase")
@@ -139,3 +160,16 @@ class Player(object):
                     msg += str(self.tokens[k]) + " \n"
         msg += "Wood : " + str(self.wood) + " & Mana : " + str(self.mana) + "\n"
         return msg
+
+    def displayTokens(self):
+        for i in self.braves:
+            self.window.blit(i.sprite, i.case.pygame_coord)
+        for i in self.warrior:
+            self.window.blit(i.sprite, i.case.pygame_coord)
+        for i in self.pyromancer:
+            self.window.blit(i.sprite, i.case.pygame_coord)
+        for i in self.enchanter:
+            self.window.blit(i.sprite, i.case.pygame_coord)
+        self.window.blit(self.shaman.sprite, self.shaman.case.pygame_coord)
+
+

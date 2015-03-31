@@ -4,6 +4,8 @@
 # author : Aurelien De Ryck
 # version : 0.01
 
+import pygame
+
 
 class Token(object):
     """Generic token"""
@@ -42,6 +44,7 @@ class Brave(Token):
         self.name = "Brave"
         self.case = case
         self.life = 1
+        self.sprite = pygame.image.load("sprites/s.png").convert_alpha()
 
     def build(self):
         pass
@@ -53,6 +56,7 @@ class Shaman(Token):
         self.name = "Shaman"
         self.case = case
         self.life = 2
+        self.sprite = pygame.image.load("sprites/s.png").convert_alpha()
 
     def sendSpell(self):
         pass
@@ -64,6 +68,7 @@ class Pyromancer(Token):
         self.name = "Pyromancer"
         self.case = case
         self.lifepoint = 3
+        self.sprite = pygame.image.load("sprites/s.png").convert_alpha()
 
     def sendFireball(self):
         pass
@@ -76,6 +81,7 @@ class Warrior(Token):
         self.name = "Warrior"
         self.case = case
         self.lifepoint = 4
+        self.sprite = pygame.image.load("sprites/s.png").convert_alpha()
 
 
 class Enchanter(Token):
@@ -84,6 +90,7 @@ class Enchanter(Token):
         self.name = "Enchanter"
         self.case = case
         self.lifepoint = 2
+        self.sprite = pygame.image.load("sprites/s.png").convert_alpha()
 
     def attack(self):
         pass

@@ -5,6 +5,7 @@
 # version : 0.01
 
 import pygame
+import random
 
 
 class Board(object):
@@ -14,6 +15,8 @@ class Board(object):
         self.circles = []
         self.forests = []
         self.sanctuaries = []
+
+        self.window = None
 
         self.readMap()
 
@@ -96,6 +99,23 @@ class Board(object):
 
         return listneighboors
 
+    def loadboard(self, window):
+        self.window = window
+        w = 0
+        while w <= self.wsize:
+            l = 0
+            while l <= self.lsize:
+                if w % 2 == 0:
+                    self.cases[(w, l)].pygame_coord = (l*97+48.5+64, w*85+64)
+                else:
+                    self.cases[(w, l)].pygame_coord = (l*97+64, w*85+64)
+                l += 1
+            w += 1
+
+    def displayboard(self):
+        for c in self.cases.values():
+            self.window.blit(c.sprite, c.pygame_coord)
+
 
 class Cell(object):
     """
@@ -112,14 +132,18 @@ class Cell(object):
         self.building = None
         self.coordinate = (coordinate[0], coordinate[1])
 
+        sprite_str = ""
         if self.type == 0:
-            self.sprite = "sprites/WWT-01.png"
+            sprite_str = random.choice(["sprites/WWT-01.png", "sprites/WWT-02.png", "sprites/WWT-03.png", "sprites/WWT-04.png",
+                           "sprites/WWT-05.png", "sprites/WWT-06.png"])
         elif self.type == 1:
-            self.sprite = "sprites/WWT-26.png"
+            sprite_str = "sprites/WWT-26.png"
         elif self.type == 2:
-            self.sprite = "sprites/WWT-07.png"
+            sprite_str = "sprites/WWT-07.png"
         elif self.type == 3:
-            self.sprite = "sprites/WWT-11.png"
+            sprite_str = "sprites/WWT-11.png"
+
+        self.sprite = pygame.image.load(sprite_str).convert_alpha()
 
         self.pygame_coord = None
 
@@ -134,8 +158,3 @@ class Cell(object):
 
     def __repr__(self):
         return str(self.type)
-
-
-
-
-
