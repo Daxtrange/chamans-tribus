@@ -63,16 +63,19 @@ class Game(object):
         BLACK.displayTokens()
         pygame.display.flip()
 
-        self.startGame()
+        self.main()
 
-    def startGame(self):
+    def main(self):
         logging.info("The game begins")
         i = 0
+        selectToken = self.playerTurn.shaman
+
         while not self.finish:
             self.window.blit(self.background, (0, 0))
             self.board.displayboard()
             RED.displayTokens()
             BLACK.displayTokens()
+
 
             for event in pygame.event.get():   # list of events
                 if event.type == QUIT:
@@ -82,27 +85,63 @@ class Game(object):
                     # self.playerTurn.shaman.case = self.board.cases[(i, 0)]
                     i += 1
                 elif event.type == KEYDOWN:
-                    cursor = self.playerTurn.shaman.case.coordinate
+                    cursor = selectToken.case.coordinate
                     if event.key == K_RIGHT:
                         if cursor[1] + 1 <= self.board.lsize:
-                            self.playerTurn.shaman.case = self.board.cases[(cursor[0], cursor[1]+1)]
+                            selectToken.case = self.board.cases[(cursor[0], cursor[1]+1)]
                     elif event.key == K_LEFT:
                         if cursor[1] - 1 >= 0:
-                            self.playerTurn.shaman.case = self.board.cases[(cursor[0], cursor[1]-1)]
+                            selectToken.case = self.board.cases[(cursor[0], cursor[1]-1)]
                     elif event.key == K_UP:
                         if cursor[0] - 1 >= 0:
-                            self.playerTurn.shaman.case = self.board.cases[(cursor[0]-1, cursor[1])]
+                            selectToken.case = self.board.cases[(cursor[0]-1, cursor[1])]
                     elif event.key == K_DOWN:
                         if cursor[0] + 1 <= self.board.wsize:
-                            self.playerTurn.shaman.case = self.board.cases[(cursor[0]+1, cursor[1])]
+                            selectToken.case = self.board.cases[(cursor[0]+1, cursor[1])]
+                    elif event.key == K_END:
+                        self.playerTurn.finish = True
+                    elif event.key == K_b:
+                        if self.playerTurn.braves:
+                            print "Brave selected"
+                            selectToken = self.playerTurn.braves[0]
+                        else:
+                            print "You have not brave"
+                    elif event.key == K_w:
+                        if self.playerTurn.warrior:
+                            print "Warrior selected"
+                            selectToken = self.playerTurn.warrior[0]
+                        else:
+                            print "You have not warroir"
+                    elif event.key == K_e:
+                        if self.playerTurn.enchanter:
+                            print "Enchanter selected"
+                            selectToken = self.playerTurn.enchanter[0]
+                        else:
+                            print "You have not enchanter"
+                    elif event.key == K_p:
+                        if self.playerTurn.pyromancer:
+                            print "Pyromancer selected"
+                            selectToken = self.playerTurn.pyromancer[0]
+                        else:
+                            print "You have not pyromancer"
+                    elif event.key == K_s:
+                        if self.playerTurn.shaman:
+                            print "Shaman selected"
+                            selectToken = self.playerTurn.shaman
+                        else:
+                            print "You have not shaman"
 
             if self.playerTurn == RED and self.playerTurn.finish is True:
                 self.playerTurn = BLACK
                 self.playerTurn.start()
+                selectToken = self.playerTurn.shaman
+
 
             elif self.playerTurn == BLACK and self.playerTurn.finish is True:
                 self.playerTurn = RED
                 self.playerTurn.start()
+                selectToken = self.playerTurn.shaman
+
             else:
                 pass
 

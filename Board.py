@@ -101,20 +101,24 @@ class Board(object):
 
     def loadboard(self, window):
         self.window = window
+        right_shift = 48.5
         w = 0
         while w <= self.wsize:
             l = 0
             while l <= self.lsize:
                 if w % 2 == 0:
-                    self.cases[(w, l)].pygame_coord = (l*97+48.5+64, w*85+64)
+                    # todo : dynamic change
+                    self.cases[(w, l)].pygame_coord = (l*97+right_shift+128, w*85+128)
                 else:
-                    self.cases[(w, l)].pygame_coord = (l*97+64, w*85+64)
+                    self.cases[(w, l)].pygame_coord = (l*97+128, w*85+128)
                 l += 1
             w += 1
 
     def displayboard(self):
         for c in self.cases.values():
-            self.window.blit(c.sprite, c.pygame_coord)
+            pos = c.sprite.get_rect()
+            pos.center = c.pygame_coord
+            self.window.blit(c.sprite, pos)
 
 
 class Cell(object):
@@ -144,6 +148,7 @@ class Cell(object):
             sprite_str = "sprites/WWT-11.png"
 
         self.sprite = pygame.image.load(sprite_str).convert_alpha()
+        self.sprite_center = self.sprite.get_rect().center
 
         self.pygame_coord = None
 

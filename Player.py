@@ -36,12 +36,6 @@ class Player(object):
             self.wood = 1
             self.mana = 1
             self.initcase = self.board.circles[1]
-            self.tokens = {SHAMAN: [Token.Shaman(self.board.circles[1])],
-                           BRAVE: [Token.Brave(self.board.circles[1]),
-                                   Token.Brave(self.board.circles[1])],
-                           WARRIOR: None,
-                           PYROMANCER: None,
-                           ENCHANTER: None}
 
             self.shaman = Token.Shaman(self.board.circles[1])
             self.braves = [Token.Brave(self.board.circles[1]), Token.Brave(self.board.circles[1])]
@@ -54,13 +48,6 @@ class Player(object):
             self.wood = 0
             self.mana = 0
             self.initcase = self.board.circles[0]
-            self.tokens = {SHAMAN: [Token.Shaman(self.board.circles[0])],
-                           BRAVE: [Token.Brave(self.board.circles[0]),
-                                   Token.Brave(self.board.circles[0]),
-                                   Token.Brave(self.board.circles[0])],
-                           WARRIOR: None,
-                           PYROMANCER: None,
-                           ENCHANTER: None}
 
             self.shaman = Token.Shaman(self.board.circles[0])
             self.braves = [Token.Brave(self.board.circles[0]),
@@ -89,13 +76,13 @@ class Player(object):
             reincarnation of the Shaman
         """
         logging.debug("reincarnating phase")
-        if SHAMAN not in self.tokens or self.tokens[SHAMAN] is None:
-            self.tokens[SHAMAN] = [Token.Shaman(self.initcase)]
+        if self.shaman is None:
+            self.shaman = Token.Shaman(self.initcase)
 
     def harvesting(self):
         logging.debug("harvesting phase")
-        braves = self.tokens.get(BRAVE)
-        for brave in braves:
+
+        for brave in self.braves:
             # todo what's happen if two tokens on one cell?
             if brave in self.board.forests:
                 self.wood += 1
@@ -134,13 +121,13 @@ class Player(object):
             i = 0
             while i < names.length:
                 if names[i] == BRAVE:
-                    self.tokens.get(BRAVE).happend(Token.Brave(coords[i]))
+                    self.braves.happend(Token.Brave(coords[i]))
                 elif names[i] == WARRIOR:
-                    self.tokens.get(WARRIOR).happend(Token.Warrior(coords[i]))
+                    self.warrior.happend(Token.Warrior(coords[i]))
                 elif names[i] == PYROMANCER:
-                    self.tokens.get(PYROMANCER).happend(Token.Pyromancer(coords[i]))
+                    self.pyromancer.happend(Token.Pyromancer(coords[i]))
                 elif names[i] == ENCHANTER:
-                    self.tokens.get(ENCHANTER).happend(Token.Enchanter(coords[i]))
+                    self.enchanter.happend(Token.Enchanter(coords[i]))
                 else:
                     logging.warn("Unknown token : " + names[i])
                     self.population -= 1
@@ -151,25 +138,38 @@ class Player(object):
     def __str__(self):
         msg = "Player " + self.color + ":\n"
 
-        for k in self.tokens.keys():
-            if self.tokens[k] is not None:
-                if type(self.tokens[k]) == list:
-                    for i in self.tokens[k]:
-                        msg += str(i) + " \n"
-                else:
-                    msg += str(self.tokens[k]) + " \n"
+        msg += str(self.shaman) + " \n"
+
+        for i in self.braves:
+            msg += str(i) + " \n"
+        for i in self.warrior:
+            msg += str(i) + " \n"
+        for i in self.enchanter:
+            msg += str(i) + " \n"
+        for i in self.pyromancer:
+            msg += str(i) + " \n"
+
         msg += "Wood : " + str(self.wood) + " & Mana : " + str(self.mana) + "\n"
         return msg
 
     def displayTokens(self):
+
+        self.window.blit(self.shaman.sprite, self.get_center(self.shaman))
+
         for i in self.braves:
-            self.window.blit(i.sprite, i.case.pygame_coord)
+            self.window.blit(i.sprite, self.get_center(i))
         for i in self.warrior:
-            self.window.blit(i.sprite, i.case.pygame_coord)
+            self.window.blit(i.sprite, self.get_center(i))
         for i in self.pyromancer:
-            self.window.blit(i.sprite, i.case.pygame_coord)
+            self.window.blit(i.sprite, self.get_center(i))
         for i in self.enchanter:
-            self.window.blit(i.sprite, i.case.pygame_coord)
-        self.window.blit(self.shaman.sprite, self.shaman.case.pygame_coord)
+            self.window.blit(i.sprite, self.get_center(i))
+
+    def get_center(self, token):
+        pos = token.sprite.get_rect()
+        pos.center = token.case.pygame_coord
+        return pos
+
+
 
 
