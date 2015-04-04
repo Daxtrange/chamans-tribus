@@ -57,44 +57,44 @@ class Board(object):
         """
         listneighboors = []
         if case.coordinate[1] + 1 <= self.lsize:
-            r = (case.coordinate[0], case.coordinate[1] + 1)
+            r = self.cases[(case.coordinate[0], case.coordinate[1] + 1)]
             listneighboors.append(r)
         if case.coordinate[1] - 1 >= 0:
-            l = (case.coordinate[0], case.coordinate[1] - 1)
+            l = self.cases[(case.coordinate[0], case.coordinate[1] - 1)]
             listneighboors.append(l)
 
         if case.coordinate[0] % 2 == 0:  # even
             if case.coordinate[0] - 1 >= 0:
-                tl = (case.coordinate[0] - 1, case.coordinate[1])
+                tl = self.cases[(case.coordinate[0] - 1, case.coordinate[1])]
                 listneighboors.append(tl)
 
                 if case.coordinate[1] + 1 <= self.lsize:
-                    tr = (case.coordinate[0] - 1, case.coordinate[1] + 1)
+                    tr = self.cases[(case.coordinate[0] - 1, case.coordinate[1] + 1)]
                     listneighboors.append(tr)
 
             if case.coordinate[0] + 1 <= self.wsize:
-                bl = (case.coordinate[0] + 1, case.coordinate[1])
+                bl = self.cases[(case.coordinate[0] + 1, case.coordinate[1])]
                 listneighboors.append(bl)
 
                 if case.coordinate[1] + 1 <= self.lsize:
-                    br = (case.coordinate[0] + 1, case.coordinate[1] + 1)
+                    br = self.cases[(case.coordinate[0] + 1, case.coordinate[1] + 1)]
                     listneighboors.append(br)
 
         else:  # odd
             if case.coordinate[0] - 1 >= 0:
                 if case.coordinate[1] - 1 >= 0:
-                    tl = (case.coordinate[0] - 1, case.coordinate[1] - 1)
+                    tl = self.cases[(case.coordinate[0] - 1, case.coordinate[1] - 1)]
                     listneighboors.append(tl)
 
-                tr = (case.coordinate[0] - 1, case.coordinate[1])
+                tr = self.cases[(case.coordinate[0] - 1, case.coordinate[1])]
                 listneighboors.append(tr)
 
             if case.coordinate[0] + 1 <= self.wsize:
                 if case.coordinate[1] - 1 >= 0:
-                    bl = (case.coordinate[0] + 1, case.coordinate[1] - 1)
+                    bl = self.cases[(case.coordinate[0] + 1, case.coordinate[1] - 1)]
                     listneighboors.append(bl)
 
-                br = (case.coordinate[0] + 1, case.coordinate[1])
+                br = self.cases[(case.coordinate[0] + 1, case.coordinate[1])]
                 listneighboors.append(br)
 
         return listneighboors

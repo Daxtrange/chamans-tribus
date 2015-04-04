@@ -69,13 +69,13 @@ class Game(object):
         logging.info("The game begins")
         i = 0
         selectToken = self.playerTurn.shaman
+        b, e, p, w = 0, 0, 0, 0
 
         while not self.finish:
             self.window.blit(self.background, (0, 0))
             self.board.displayboard()
             RED.displayTokens()
             BLACK.displayTokens()
-
 
             for event in pygame.event.get():   # list of events
                 if event.type == QUIT:
@@ -87,41 +87,63 @@ class Game(object):
                 elif event.type == KEYDOWN:
                     cursor = selectToken.case.coordinate
                     if event.key == K_RIGHT:
-                        if cursor[1] + 1 <= self.board.lsize:
-                            selectToken.case = self.board.cases[(cursor[0], cursor[1]+1)]
+                        x, y = cursor[0], cursor[1] + 1
+                        if y <= self.board.lsize:
+                            if self.board.cases[(x, y)] in selectToken.accessible_cases:
+                                selectToken.case = self.board.cases[(x, y)]
                     elif event.key == K_LEFT:
-                        if cursor[1] - 1 >= 0:
-                            selectToken.case = self.board.cases[(cursor[0], cursor[1]-1)]
+                        x, y = cursor[0], cursor[1]-1
+                        if y >= 0:
+                            if self.board.cases[(x, y)] in selectToken.accessible_cases:
+                                selectToken.case = self.board.cases[(x, y)]
                     elif event.key == K_UP:
-                        if cursor[0] - 1 >= 0:
-                            selectToken.case = self.board.cases[(cursor[0]-1, cursor[1])]
+                        x, y = cursor[0]-1, cursor[1]
+                        if x >= 0:
+                            if self.board.cases[(x, y)] in selectToken.accessible_cases:
+                                selectToken.case = self.board.cases[(x, y)]
                     elif event.key == K_DOWN:
-                        if cursor[0] + 1 <= self.board.wsize:
-                            selectToken.case = self.board.cases[(cursor[0]+1, cursor[1])]
+                        x, y = cursor[0]+1, cursor[1]
+                        if x <= self.board.wsize:
+                            if self.board.cases[(x, y)] in selectToken.accessible_cases:
+                                selectToken.case = self.board.cases[(x, y)]
+
                     elif event.key == K_END:
                         self.playerTurn.finish = True
+
                     elif event.key == K_b:
                         if self.playerTurn.braves:
-                            print "Brave selected"
-                            selectToken = self.playerTurn.braves[0]
+                            if b >= len(self.playerTurn.braves):
+                                b = 0
+                            print "Brave "+str(b)+" selected"
+                            selectToken = self.playerTurn.braves[b]
+                            b += 1
                         else:
                             print "You have not brave"
                     elif event.key == K_w:
                         if self.playerTurn.warrior:
-                            print "Warrior selected"
-                            selectToken = self.playerTurn.warrior[0]
+                            if w >= len(self.playerTurn.warrior):
+                                w = 0
+                            print "Warrior "+str(w)+" selected"
+                            selectToken = self.playerTurn.warrior[w]
+                            w += 1
                         else:
                             print "You have not warroir"
                     elif event.key == K_e:
                         if self.playerTurn.enchanter:
-                            print "Enchanter selected"
-                            selectToken = self.playerTurn.enchanter[0]
+                            if e >= len(self.playerTurn.enchanter):
+                                e = 0
+                            print "Enchanter "+str(e)+" selected"
+                            selectToken = self.playerTurn.enchanter[e]
+                            e += 1
                         else:
                             print "You have not enchanter"
                     elif event.key == K_p:
                         if self.playerTurn.pyromancer:
-                            print "Pyromancer selected"
-                            selectToken = self.playerTurn.pyromancer[0]
+                            if p >= len(self.playerTurn.pyromancer):
+                                p = 0
+                            print "Pyromancer "+str(p)+" selected"
+                            selectToken = self.playerTurn.pyromancer[p]
+                            p += 1
                         else:
                             print "You have not pyromancer"
                     elif event.key == K_s:
@@ -132,12 +154,14 @@ class Game(object):
                             print "You have not shaman"
 
             if self.playerTurn == RED and self.playerTurn.finish is True:
+                b, w, e, p = 0, 0, 0, 0
                 self.playerTurn = BLACK
                 self.playerTurn.start()
                 selectToken = self.playerTurn.shaman
 
 
             elif self.playerTurn == BLACK and self.playerTurn.finish is True:
+                b, w, e, p = 0, 0, 0, 0
                 self.playerTurn = RED
                 self.playerTurn.start()
                 selectToken = self.playerTurn.shaman

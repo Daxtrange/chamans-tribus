@@ -6,7 +6,6 @@
 
 import Token
 import logging
-import pygame
 
 SHAMAN = 0
 BRAVE = 1
@@ -65,11 +64,12 @@ class Player(object):
         logging.info("Player " + self.color + "'s turn")
         print("Player " + self.color + "'s turn")
         self.finish = False
-
+        self.allMoves()
         self.reincarnating()
         self.harvesting()
-        self.action()
-        self.healing()
+        # self.action()
+        # self.healing()
+        print self.__str__()
 
     def reincarnating(self):
         """
@@ -84,9 +84,9 @@ class Player(object):
 
         for brave in self.braves:
             # todo what's happen if two tokens on one cell?
-            if brave in self.board.forests:
+            if brave.case in self.board.forests:
                 self.wood += 1
-            elif brave in self.board.sanctuaries:
+            elif brave.case in self.board.sanctuaries:
                 self.mana += 1
 
     def action(self):
@@ -121,13 +121,13 @@ class Player(object):
             i = 0
             while i < names.length:
                 if names[i] == BRAVE:
-                    self.braves.happend(Token.Brave(coords[i]))
+                    self.braves.append(Token.Brave(coords[i]))
                 elif names[i] == WARRIOR:
-                    self.warrior.happend(Token.Warrior(coords[i]))
+                    self.warrior.append(Token.Warrior(coords[i]))
                 elif names[i] == PYROMANCER:
-                    self.pyromancer.happend(Token.Pyromancer(coords[i]))
+                    self.pyromancer.append(Token.Pyromancer(coords[i]))
                 elif names[i] == ENCHANTER:
-                    self.enchanter.happend(Token.Enchanter(coords[i]))
+                    self.enchanter.append(Token.Enchanter(coords[i]))
                 else:
                     logging.warn("Unknown token : " + names[i])
                     self.population -= 1
@@ -169,6 +169,22 @@ class Player(object):
         pos = token.sprite.get_rect()
         pos.center = token.case.pygame_coord
         return pos
+
+    def allMoves(self):
+
+        self.shaman.move(self.board)
+
+        for b in self.braves:
+            b.move(self.board)
+        for e in self.enchanter:
+            e.move(self.board)
+        for p in self.pyromancer:
+            p.move(self.board)
+        for w in self.warrior:
+            w.move(self.warrior)
+
+
+
 
 
 
