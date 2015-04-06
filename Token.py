@@ -18,18 +18,17 @@ class Token(object):
         self.accessible_cases = []
 
     def move(self, board):
+        self.accessible_cases = []
         # need move of 3
-        x, y = self.case.coordinate
-        listx = range(x - 3, x + 4)
-        listy = range(y - 3, y + 4)
+        q, r = self.case.coordinate
+        listq = range(q - 3, q + 4)
+        listr = range(r - 3, r + 4)
 
-        for i in listx:
-            for j in listy:
-                if(i-x**2+j-y**2) <= 3:
-                    try:
-                        self.accessible_cases.append(board.cases[(i, j)])
-                    except:
-                        pass
+        for i in listq:
+            for j in listr:
+                if abs(i-q) + abs(j-r) <= 3:
+                    if (i, j) in board.cases:
+                        self.accessible_cases.append((i, j))
 
         # self.accessible_cases = board.neighbors(self.case)
         # self.accessible_cases.append(self.case)

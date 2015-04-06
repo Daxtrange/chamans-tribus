@@ -73,7 +73,7 @@ class Game(object):
 
         while not self.finish:
             self.window.blit(self.background, (0, 0))
-            self.board.displayboard()
+            self.board.displayboard(selectToken.accessible_cases)
             RED.displayTokens()
             BLACK.displayTokens()
 
@@ -87,25 +87,21 @@ class Game(object):
                 elif event.type == KEYDOWN:
                     cursor = selectToken.case.coordinate
                     if event.key == K_RIGHT:
-                        x, y = cursor[0], cursor[1] + 1
-                        if y <= self.board.lsize:
-                            if self.board.cases[(x, y)] in selectToken.accessible_cases:
-                                selectToken.case = self.board.cases[(x, y)]
+                        q, r = cursor[0] + 1, cursor[1]
+                        if (q, r) in selectToken.accessible_cases:
+                            selectToken.case = self.board.cases[(q, r)]
                     elif event.key == K_LEFT:
-                        x, y = cursor[0], cursor[1]-1
-                        if y >= 0:
-                            if self.board.cases[(x, y)] in selectToken.accessible_cases:
-                                selectToken.case = self.board.cases[(x, y)]
+                        q, r = cursor[0] - 1, cursor[1]
+                        if (q, r) in selectToken.accessible_cases:
+                            selectToken.case = self.board.cases[(q, r)]
                     elif event.key == K_UP:
-                        x, y = cursor[0]-1, cursor[1]
-                        if x >= 0:
-                            if self.board.cases[(x, y)] in selectToken.accessible_cases:
-                                selectToken.case = self.board.cases[(x, y)]
+                        q, r = cursor[0], cursor[1] - 1
+                        if (q, r) in selectToken.accessible_cases:
+                            selectToken.case = self.board.cases[(q, r)]
                     elif event.key == K_DOWN:
-                        x, y = cursor[0]+1, cursor[1]
-                        if x <= self.board.wsize:
-                            if self.board.cases[(x, y)] in selectToken.accessible_cases:
-                                selectToken.case = self.board.cases[(x, y)]
+                        q, r = cursor[0], cursor[1] + 1
+                        if (q, r) in selectToken.accessible_cases:
+                            selectToken.case = self.board.cases[(q, r)]
 
                     elif event.key == K_END:
                         self.playerTurn.finish = True
@@ -191,6 +187,8 @@ class Game(object):
         msg += str(RED) + "\n"
         msg += str(BLACK) + "\n"
         print(msg)
+
+
 
 
 if __name__ == '__main__':

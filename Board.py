@@ -6,7 +6,12 @@
 
 import pygame
 import random
+import operator
 
+DIRECTIONS = [
+    [(1, 0), (1, -1), (0, -1), (-1, 0), (0, 1), (1, 1)],
+    [(1, 0), (0, -1), (-1, -1), (-1, 0), (-1, 1), (0, 1)]
+              ]
 
 class Board(object):
     def __init__(self, map="map1.txt"):
@@ -28,15 +33,15 @@ class Board(object):
 
     def readMap(self):
         self.cases = {}
-        actualcoord = [0, 0]
+        q, r = 0, 0
 
         with open("Map/"+self.map) as f:
             for l in f.readlines():
-                actualcoord[1] = 0  # start a new line
+                q = 0  # start a new line
                 for c in l:
                     if c != '\n':
-                        case = Cell(int(c), actualcoord)
-                        self.cases[(actualcoord[0], actualcoord[1])] = case
+                        case = Cell(int(c), (q, r))
+                        self.cases[(q, r)] = case
 
                         if int(c) == 1:
                             self.circles.append(case)
@@ -45,80 +50,54 @@ class Board(object):
                         elif int(c) == 3:
                             self.sanctuaries.append(case)
 
-                        self.lsize = actualcoord[1]
-                        actualcoord[1] += 1
+                        self.lsize = q
+                        q += 1
 
-                self.wsize = actualcoord[0]
-                actualcoord[0] += 1
+                self.wsize = r
+                r += 1
 
     def neighbors(self, case):
         """
         :return list of all adjacent cells
         """
+        q, r = case.coordinate
+        parity = r & 1
+
         listneighboors = []
-        if case.coordinate[1] + 1 <= self.lsize:
-            r = self.cases[(case.coordinate[0], case.coordinate[1] + 1)]
-            listneighboors.append(r)
-        if case.coordinate[1] - 1 >= 0:
-            l = self.cases[(case.coordinate[0], case.coordinate[1] - 1)]
-            listneighboors.append(l)
 
-        if case.coordinate[0] % 2 == 0:  # even
-            if case.coordinate[0] - 1 >= 0:
-                tl = self.cases[(case.coordinate[0] - 1, case.coordinate[1])]
-                listneighboors.append(tl)
+        for i in range(0,6):
+            dir = DIRECTIONS[parity][i]
+            coord = tuple(map(operator.add, (q, r), dir))
 
-                if case.coordinate[1] + 1 <= self.lsize:
-                    tr = self.cases[(case.coordinate[0] - 1, case.coordinate[1] + 1)]
-                    listneighboors.append(tr)
-
-            if case.coordinate[0] + 1 <= self.wsize:
-                bl = self.cases[(case.coordinate[0] + 1, case.coordinate[1])]
-                listneighboors.append(bl)
-
-                if case.coordinate[1] + 1 <= self.lsize:
-                    br = self.cases[(case.coordinate[0] + 1, case.coordinate[1] + 1)]
-                    listneighboors.append(br)
-
-        else:  # odd
-            if case.coordinate[0] - 1 >= 0:
-                if case.coordinate[1] - 1 >= 0:
-                    tl = self.cases[(case.coordinate[0] - 1, case.coordinate[1] - 1)]
-                    listneighboors.append(tl)
-
-                tr = self.cases[(case.coordinate[0] - 1, case.coordinate[1])]
-                listneighboors.append(tr)
-
-            if case.coordinate[0] + 1 <= self.wsize:
-                if case.coordinate[1] - 1 >= 0:
-                    bl = self.cases[(case.coordinate[0] + 1, case.coordinate[1] - 1)]
-                    listneighboors.append(bl)
-
-                br = self.cases[(case.coordinate[0] + 1, case.coordinate[1])]
-                listneighboors.append(br)
+            if coord in self.cases:
+                listneighboors.append(coord)
 
         return listneighboors
 
     def loadboard(self, window):
         self.window = window
         right_shift = 48.5
-        w = 0
-        while w <= self.wsize:
-            l = 0
-            while l <= self.lsize:
-                if w % 2 == 0:
+        r = 0
+        while r <= self.wsize:
+            q = 0
+            while q <= self.lsize:
+                if r % 2 == 0:
                     # todo : dynamic change
-                    self.cases[(w, l)].pygame_coord = (l*97+right_shift+128, w*85+128)
+                    self.cases[(q, r)].pygame_coord = (q*97+right_shift+128, r*85+128)
                 else:
-                    self.cases[(w, l)].pygame_coord = (l*97+128, w*85+128)
-                l += 1
-            w += 1
+                    self.cases[(q, r)].pygame_coord = (q*97+128, r*85+128)
+                q += 1
+            r += 1
 
-    def displayboard(self):
+    def displayboard(self, accessible_cases):
         for c in self.cases.values():
             pos = c.sprite.get_rect()
             pos.center = c.pygame_coord
-            self.window.blit(c.sprite, pos)
+
+            if c.coordinate in accessible_cases:
+                self.window.blit(c.sprite_s, pos)
+            else:
+                self.window.blit(c.sprite, pos)
 
 
 class Cell(object):
@@ -136,18 +115,25 @@ class Cell(object):
         self.building = None
         self.coordinate = (coordinate[0], coordinate[1])
 
-        sprite_str = ""
+        self.sprite_str = ""
         if self.type == 0:
-            sprite_str = random.choice(["sprites/WWT-01.png", "sprites/WWT-02.png", "sprites/WWT-03.png", "sprites/WWT-04.png",
-                           "sprites/WWT-05.png", "sprites/WWT-06.png"])
+            self.sprite_str = random.choice(["sprites/WWT-01.png",
+                                             "sprites/WWT-02.png",
+                                             "sprites/WWT-03.png",
+                                             "sprites/WWT-04.png",
+                                             "sprites/WWT-05.png",
+                                             "sprites/WWT-06.png"])
         elif self.type == 1:
-            sprite_str = "sprites/WWT-26.png"
+            self.sprite_str = "sprites/WWT-26.png"
         elif self.type == 2:
-            sprite_str = "sprites/WWT-07.png"
+            self.sprite_str = "sprites/WWT-07.png"
         elif self.type == 3:
-            sprite_str = "sprites/WWT-11.png"
+            self.sprite_str = "sprites/WWT-11.png"
 
-        self.sprite = pygame.image.load(sprite_str).convert_alpha()
+        self.sprite_str_select = self.sprite_str[:-4]+"_s"+".png"
+
+        self.sprite = pygame.image.load(self.sprite_str).convert_alpha()
+        self.sprite_s = pygame.image.load(self.sprite_str_select).convert_alpha()
         self.sprite_center = self.sprite.get_rect().center
 
         self.pygame_coord = None
@@ -163,3 +149,11 @@ class Cell(object):
 
     def __repr__(self):
         return str(self.type)
+
+    def hex_to_cube(self):
+        # convert even-r offset to cube
+        x = self.coordinate[0] - (self.coordinate[1] + (self.coordinate[1] & 1)) / 2
+        z = self.coordinate[1]
+        y = -x-z
+        print (x,y,z)
+        return x, y, z
