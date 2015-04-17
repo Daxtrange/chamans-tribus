@@ -183,6 +183,11 @@ class Player(object):
         for w in self.warrior:
             w.move(self.warrior)
 
+        a = self.shaman.accessible_cases[0]
+        b = self.shaman.accessible_cases[-1]
+        print a, b
+        print self.board.cube_distance(a, b)
+
 
 
 

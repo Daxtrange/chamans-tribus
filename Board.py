@@ -94,10 +94,20 @@ class Board(object):
             pos = c.sprite.get_rect()
             pos.center = c.pygame_coord
 
+            if c.building:
+                self.window.blit(c.building.sprite, pos)
+
             if c.coordinate in accessible_cases:
                 self.window.blit(c.sprite_s, pos)
             else:
                 self.window.blit(c.sprite, pos)
+
+    def cube_distance(self, a, b):
+        a = self.cases[a]
+        b = self.cases[b]
+        return (abs(a.hex[0] - b.hex[0]) +
+                abs(a.hex[1] - b.hex[1]) +
+                abs(a.hex[2] - b.hex[2]) / 2)
 
 
 class Cell(object):
@@ -138,6 +148,10 @@ class Cell(object):
 
         self.pygame_coord = None
 
+        self.hex = self.hex_to_cube()
+
+        self.building = None
+
     def addBuilding(self, building):
         self.building = building
 
@@ -155,5 +169,11 @@ class Cell(object):
         x = self.coordinate[0] - (self.coordinate[1] + (self.coordinate[1] & 1)) / 2
         z = self.coordinate[1]
         y = -x-z
-        print (x,y,z)
         return x, y, z
+
+    def cube_to_hex(self, x, y, z):
+        q = x + (z + (z&1)) / 2
+        r = z
+        return q, r
+
+

@@ -68,6 +68,7 @@ class Game(object):
     def main(self):
         logging.info("The game begins")
         i = 0
+
         selectToken = self.playerTurn.shaman
         b, e, p, w = 0, 0, 0, 0
 
@@ -148,6 +149,13 @@ class Game(object):
                             selectToken = self.playerTurn.shaman
                         else:
                             print "You have not shaman"
+
+                    elif event.key == K_c:
+                        # check if the token can build (brave only)
+                        if "build" in dir(selectToken):
+                            selectToken.build("Hut")
+                        else:
+                            print "This token can not construct a hut"
 
             if self.playerTurn == RED and self.playerTurn.finish is True:
                 b, w, e, p = 0, 0, 0, 0

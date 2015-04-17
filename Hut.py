@@ -4,16 +4,20 @@
 # author : Aurelien De Ryck
 # version : 0.01
 
+import pygame
 
 class Hut(object):
     def __init__(self):
         self.name = "Huts"
+        self.sprite = pygame.image.load("sprites/huts/huttes1.png").convert_alpha()
+
 
 
 class EconomicHut(Hut):
     def __init__(self):
         self.name = "EconomicHut"
         self.level = 1
+        self.sprite = pygame.image.load("sprites/huts/huttes1.png").convert_alpha()
 
     def upgrade(self):
         if self.level <= 3:
